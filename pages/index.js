@@ -43,11 +43,83 @@ export default function Home() {
       {chosen !== null && (
         <Person
           person={people[chosen]}
-          setName={(name) => {}}
-          toggleTodo={(index) => {}}
-          setTodo={(index, value) => {}}
-          addTodo={(value) => {}}
-          removeTodo={(index) => {}}
+          setName={(name) => {
+            setPeople(
+              people.map((person, pIndex) => {
+                if (pIndex !== chosen) {
+                  return person;
+                }
+                return {
+                  ...person,
+                  name,
+                };
+              })
+            );
+          }}
+          toggleTodo={(index) => {
+            setPeople(
+              people.map((person, pIndex) => {
+                if (pIndex !== chosen) {
+                  return person;
+                }
+                return {
+                  ...person,
+                  todos: person.todos.map((todo, tIndex) => {
+                    if (tIndex !== index) {
+                      return todo;
+                    }
+                    return { ...todo, done: !todo.done };
+                  }),
+                };
+              })
+            );
+          }}
+          setTodo={(index, value) => {
+            setPeople(
+              people.map((person, pIndex) => {
+                if (pIndex !== chosen) {
+                  return person;
+                }
+                return {
+                  ...person,
+                  todos: person.todos.map((todo, tIndex) => {
+                    if (tIndex !== index) {
+                      return todo;
+                    }
+                    return { ...todo, name: value };
+                  }),
+                };
+              })
+            );
+          }}
+          addTodo={(value) => {
+            setPeople(
+              people.map((person, pIndex) => {
+                if (pIndex !== chosen) {
+                  return person;
+                }
+                return {
+                  ...person,
+                  todos: [...person.todos, { name: value, done: false }],
+                };
+              })
+            );
+          }}
+          removeTodo={(index) => {
+            setPeople(
+              people.map((person, pIndex) => {
+                if (pIndex !== chosen) {
+                  return person;
+                }
+                return {
+                  ...person,
+                  todos: person.todos.filter(
+                    (_todo, tIndex) => tIndex !== index
+                  ),
+                };
+              })
+            );
+          }}
         />
       )}
     </div>
