@@ -8,8 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "immer": "^7.0.9",
     "next": "9.5.5",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "use-immer": "^0.4.1"
   }
 }

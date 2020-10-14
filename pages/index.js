@@ -1,65 +1,100 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState } from "react";
+// import produce from "immer";
+// import { useImmer } from "use-immer";
 
 export default function Home() {
+  const [chosen, setChosen] = useState(null);
+  const [people, setPeople] = useState([
+    {
+      name: "Leigh",
+      todos: [
+        { name: "Call mom", done: false },
+        { name: "Clean mess", done: false },
+      ],
+    },
+    {
+      name: "Mauricio",
+      todos: [
+        { name: "Write codes", done: false },
+        { name: "Make business deals", done: false },
+        { name: "Get paid", done: false },
+      ],
+    },
+    {
+      name: "Marian",
+      todos: [
+        { name: "Study laws", done: false },
+        { name: "Write article", done: false },
+      ],
+    },
+  ]);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div>
+      <h1>All The ToDos</h1>
+      <ul>
+        {people.map((person, index) => (
+          <li key={person.name}>
+            <button onClick={() => setChosen(index)}>{person.name}</button>
+          </li>
+        ))}
+      </ul>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      {chosen !== null && (
+        <Person
+          person={people[chosen]}
+          setName={(name) => {}}
+          toggleTodo={(index) => {}}
+          setTodo={(index, value) => {}}
+          addTodo={(value) => {}}
+          removeTodo={(index) => {}}
+        />
+      )}
     </div>
-  )
+  );
+}
+
+function Person({ person, setName, toggleTodo, setTodo, addTodo, removeTodo }) {
+  const [newValue, setNewValue] = useState("");
+
+  return (
+    <div>
+      <h2>{person.name}</h2>
+      <input
+        value={person.name}
+        onChange={(event) => setName(event.target.value)}
+      />
+      <ul>
+        {person.todos.map((todo, index) => (
+          <li key={index}>
+            <button onClick={() => removeTodo(index)}>del</button>
+            <input
+              value={todo.name}
+              onChange={(event) => setTodo(index, event.target.value)}
+            />
+            <input
+              type="checkbox"
+              checked={todo.done}
+              onChange={() => toggleTodo(index)}
+            />
+          </li>
+        ))}
+
+        <li>
+          <button
+            onClick={() => {
+              addTodo(newValue);
+              setNewValue("");
+            }}
+          >
+            add
+          </button>
+          <input
+            value={newValue}
+            onChange={(event) => setNewValue(event.target.value)}
+          />
+        </li>
+      </ul>
+    </div>
+  );
 }
