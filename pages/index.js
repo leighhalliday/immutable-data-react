@@ -1,10 +1,10 @@
 import { useState } from "react";
 // import produce from "immer";
-// import { useImmer } from "use-immer";
+import { useImmer } from "use-immer";
 
 export default function Home() {
   const [chosen, setChosen] = useState(null);
-  const [people, setPeople] = useState([
+  const [people, setPeople] = useImmer([
     {
       name: "Leigh",
       todos: [
@@ -44,81 +44,30 @@ export default function Home() {
         <Person
           person={people[chosen]}
           setName={(name) => {
-            setPeople(
-              people.map((person, pIndex) => {
-                if (pIndex !== chosen) {
-                  return person;
-                }
-                return {
-                  ...person,
-                  name,
-                };
-              })
-            );
+            setPeople((draft) => {
+              draft[chosen].name = name;
+            });
           }}
           toggleTodo={(index) => {
-            setPeople(
-              people.map((person, pIndex) => {
-                if (pIndex !== chosen) {
-                  return person;
-                }
-                return {
-                  ...person,
-                  todos: person.todos.map((todo, tIndex) => {
-                    if (tIndex !== index) {
-                      return todo;
-                    }
-                    return { ...todo, done: !todo.done };
-                  }),
-                };
-              })
-            );
+            setPeople((draft) => {
+              draft[chosen].todos[index].done = !draft[chosen].todos[index]
+                .done;
+            });
           }}
           setTodo={(index, value) => {
-            setPeople(
-              people.map((person, pIndex) => {
-                if (pIndex !== chosen) {
-                  return person;
-                }
-                return {
-                  ...person,
-                  todos: person.todos.map((todo, tIndex) => {
-                    if (tIndex !== index) {
-                      return todo;
-                    }
-                    return { ...todo, name: value };
-                  }),
-                };
-              })
-            );
+            setPeople((draft) => {
+              draft[chosen].todos[index].name = value;
+            });
           }}
           addTodo={(value) => {
-            setPeople(
-              people.map((person, pIndex) => {
-                if (pIndex !== chosen) {
-                  return person;
-                }
-                return {
-                  ...person,
-                  todos: [...person.todos, { name: value, done: false }],
-                };
-              })
-            );
+            setPeople((draft) => {
+              draft[chosen].todos.push({ name: value, done: false });
+            });
           }}
           removeTodo={(index) => {
-            setPeople(
-              people.map((person, pIndex) => {
-                if (pIndex !== chosen) {
-                  return person;
-                }
-                return {
-                  ...person,
-                  todos: person.todos.filter(
-                    (_todo, tIndex) => tIndex !== index
-                  ),
-                };
-              })
-            );
+            setPeople((draft) => {
+              delete draft[chosen].todos[index];
+            });
           }}
         />
       )}
